@@ -3,8 +3,10 @@ package com.enteractive.trees;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Point2D;
+import javafx.scene.control.DatePicker;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +33,8 @@ public class BlockList implements Serializable {
      * @param height bound of pane
      * @return new block
      */
-    public Block addBlock(Point2D point2D, String text,boolean ready, DoubleProperty width, ReadOnlyDoubleProperty height) {
-        Block block = new Block(point2D,text,ready,onDrag,width,height);
+    public Block addBlock(Point2D point2D, String text, boolean ready, DoubleProperty width, ReadOnlyDoubleProperty height, LocalDate data,String desc) {
+        Block block = new Block(point2D,text,ready,onDrag,width,height,data,desc);
         blocks.add(block);
         return block;
     }

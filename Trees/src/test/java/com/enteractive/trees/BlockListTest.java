@@ -8,6 +8,9 @@ import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+
+import java.time.LocalDate;
+
 @RunWith(JfxRunner.class)
 class BlockListTest {
 
@@ -20,21 +23,21 @@ class BlockListTest {
 
     @Test
     void addBlock() {
-        Block block = blockList.addBlock(new Point2D(0, 9), "j", false,new SimpleDoubleProperty(3),new SimpleDoubleProperty(5));
+        Block block = blockList.addBlock(new Point2D(0, 9), "j", false,new SimpleDoubleProperty(3),new SimpleDoubleProperty(5),LocalDate.now(),"");
         Assert.assertEquals(block,blockList.getBlocks().get(0));
     }
 
     @Test
     void getBlocks() {
-        blockList.addBlock(new Point2D(0, 9), "j", false,new SimpleDoubleProperty(3),new SimpleDoubleProperty(5));
-        blockList.addBlock(new Point2D(10, 9), "j", false,new SimpleDoubleProperty(3),new SimpleDoubleProperty(5));
-        blockList.addBlock(new Point2D(110, 9), "jsd", false,new SimpleDoubleProperty(35),new SimpleDoubleProperty(35));
+        blockList.addBlock(new Point2D(0, 9), "j", false,new SimpleDoubleProperty(3),new SimpleDoubleProperty(5),LocalDate.now(),"");
+        blockList.addBlock(new Point2D(10, 9), "j", false,new SimpleDoubleProperty(3),new SimpleDoubleProperty(5),LocalDate.now(),"");
+        blockList.addBlock(new Point2D(110, 9), "jsd", false,new SimpleDoubleProperty(35),new SimpleDoubleProperty(35),LocalDate.now(),"");
         Assert.assertEquals(3,blockList.getBlocks().size());
     }
 
     @Test
     void parentDelete() {
-        Block block = blockList.addBlock(new Point2D(110, 9), "jsd", false,new SimpleDoubleProperty(35),new SimpleDoubleProperty(35));
+        Block block = blockList.addBlock(new Point2D(110, 9), "jsd", false,new SimpleDoubleProperty(35),new SimpleDoubleProperty(35), LocalDate.now(),"");
         block.setParent(true);
         blockList.parentDelete();
         Assert.assertFalse(block.getParentBoolean());

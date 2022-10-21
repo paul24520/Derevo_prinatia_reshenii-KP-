@@ -4,7 +4,9 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -13,6 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -23,8 +26,13 @@ public class Block extends Group implements Serializable {
 
     transient public ArrayList<DragListener> listeners = new ArrayList<>();
     transient protected Label blockText;
+
+    transient protected DatePicker data;
     transient protected TextField editText;
+    public LocalDate datacal;
     public String text;
+    public String description;
+    transient TextArea desc;
     protected double width;
     protected double height;
     transient protected Point2D point;
@@ -35,20 +43,27 @@ public class Block extends Group implements Serializable {
     private double mouseAnchorY;
     transient boolean parent;
 
-    public Block(Point2D point, String text,boolean Ready, DragListener onDrag, DoubleProperty widthBound, ReadOnlyDoubleProperty heightBound)
+    public Block(Point2D point, String text,boolean Ready, DragListener onDrag, DoubleProperty widthBound, ReadOnlyDoubleProperty heightBound, LocalDate datacal,String description)
     {
         this.text=text;
         pX=point.getX();
         pY=point.getY();
         ready = Ready;
+        this.description = description;
         float div=0;
         setTranslateX(point.getX());
         setTranslateY(point.getY());
-
+        desc=new TextArea(description);
         blockText = new Label(text);
         editText= new TextField(text);
+        this.datacal=datacal;
+        data = new DatePicker(this.datacal);
+        data.setMaxWidth(100);
+        desc.setPrefColumnCount(10);
+        desc.setPrefRowCount(2);
         blockText.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2 && !e.isAltDown()) {
+
                 this.text = blockText.getText();
                 editText.setText(this.text);
                 blockText.setVisible(false);
@@ -62,6 +77,7 @@ public class Block extends Group implements Serializable {
                 draw();
             }
         });
+        desc.setOnKeyTyped(e -> this.description=desc.getText());
         editText.setOnKeyTyped(e -> this.text=editText.getText());
         editText.focusedProperty().addListener((observable, oldValue, newValue) ->{
                 if(!newValue) {
@@ -72,6 +88,9 @@ public class Block extends Group implements Serializable {
                     draw();
                 }
         });
+        data.setOnKeyTyped(e -> this.datacal=data.getValue());
+        data.setOnAction(e -> this.datacal=data.getValue());
+        editText.setOnKeyTyped(e -> this.datacal=data.getValue());
         editText.setOnKeyReleased(e -> {
             this.text=editText.getText();
             if(e.getCode() == KeyCode.ENTER)
@@ -88,7 +107,8 @@ public class Block extends Group implements Serializable {
         blockText.setFont(Font.font("Console", 10));
         editText.setStyle("-fx-focus-color: -fx-control-inner-background ; -fx-border-color: transparent; -fx-background-color:transparent;  -fx-faint-focus-color: -fx-control-inner-background ;");
         editText.setFont(Font.font("Console", 10));
-
+        desc.setStyle("-fx-focus-color: -fx-control-inner-background ; -fx-border-color: transparent; -fx-background-color:transparent;  -fx-faint-focus-color: -fx-control-inner-background ;");
+        desc.setFont(Font.font("Console", 10));
         this.point = point;
         pX = this.point.getX();
         pY = this.point.getY();
@@ -98,6 +118,8 @@ public class Block extends Group implements Serializable {
         editText.setVisible(false);
         getChildren().add(blockText);
         getChildren().add(editText);
+        getChildren().add(data);
+        getChildren().add(desc);
 
         setOnMousePressed(mouseEvent -> {
             mouseAnchorX = mouseEvent.getX();
@@ -142,6 +164,8 @@ public class Block extends Group implements Serializable {
      * drawing on pane
      */
     public void draw() {
+        data.applyCss();
+        data.layout();
         blockText.applyCss();
         blockText.layout();
         editText.layout();
@@ -204,9 +228,14 @@ public class Block extends Group implements Serializable {
         getChildren().add(clip);
         getChildren().add(blockText);
         getChildren().add(editText);
-            getChildren().addAll(ready1,ready2);
+        data.prefWidth(width);
+        getChildren().add(data);
+        getChildren().add(desc);
+        getChildren().addAll(ready1,ready2);
         blockText.setTranslateX(offset * 0.5f);
         blockText.setTranslateY(offset * 0.5f);
+        data.setTranslateY(offset* 2.7f);
+        desc.setTranslateY(offset*5);
     }
     public double getHeight() {
         return height;

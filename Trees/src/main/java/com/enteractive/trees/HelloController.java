@@ -5,10 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
@@ -19,6 +16,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.*;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -73,7 +71,8 @@ public class HelloController implements Initializable {
      */
     public void BlockCreate()
     {
-        Block block = blocks.addBlock(new Point2D(30,30),"Текст",false,TreeBlocks.layoutXProperty(),TreeBlocks.heightProperty());
+        LocalDate data= LocalDate.now();
+        Block block = blocks.addBlock(new Point2D(30,30),"Текст",false,TreeBlocks.layoutXProperty(),TreeBlocks.heightProperty(), data,"описание");
         drawShape(block);
         TreeViewUpdate();
     }
@@ -260,7 +259,7 @@ public class HelloController implements Initializable {
         FileInputStream fis = new FileInputStream(file);
         ObjectInputStream inputStream = new ObjectInputStream(fis);
         for (Block st: ((BlockList) inputStream.readObject()).getBlocks()) {
-            Block temp = blocks.addBlock(new Point2D(st.pX,st.pY),st.text,st.ready,TreeBlocks.layoutXProperty(), TreeBlocks.heightProperty());
+            Block temp = blocks.addBlock(new Point2D(st.pX,st.pY),st.text,st.ready,TreeBlocks.layoutXProperty(), TreeBlocks.heightProperty(), st.datacal,st.description );
             drawShape(temp);
         }
         for (Arrow arrow:((Arrows)inputStream.readObject()).getArrowList()) {
