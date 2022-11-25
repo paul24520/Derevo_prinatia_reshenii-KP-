@@ -1,0 +1,92 @@
+@startuml
+class com.enteractive.trees.ConnectedBlocks {
++ Block[] arr
+}
+class com.enteractive.trees.Block {
++ ArrayList<DragListener> listeners
+# Label blockText
+# TextField editText
++ String text
+# double width
+# double height
+# Point2D point
++ double pX
++ double pY
+- double mouseAnchorX
++ boolean ready
+- double mouseAnchorY
+~ boolean parent
++ boolean getParentBoolean()
++ void setParent(boolean)
++ void draw()
++ double getHeight()
++ double getWidth()
++ Point2D getPosition()
++ double minY()
++ double minX()
++ double maxY()
++ double maxX()
++ ArrayList<Point2D> getArrayOfMinMaxPoints()
++ boolean Equals(Block)
+}
+class com.enteractive.trees.HelloApplication {
++ void start(Stage)
++ {static} void main(String[])
+}
+class com.enteractive.trees.Arrows {
+- List<Arrow> arrowList
++ List<Arrow> getArrowList()
+}
+interface com.enteractive.trees.DragListener {
+~ void onDrag()
+}
+class com.enteractive.trees.BlockList {
+- List<Block> blocks
+~ DragListener onDrag
++ Block addBlock(Point2D,String,boolean,DoubleProperty,ReadOnlyDoubleProperty)
++ List<Block> getBlocks()
++ void parentDelete()
+}
+class com.enteractive.trees.Arrow {
++ Block from
++ Block to
+}
+class com.enteractive.trees.HelloController {
++ Pane workSpace
++ TreeView<String> TreeBlocks
+- FileChooser fileChooser
+~ BlockList blocks
+~ Block from
+~ Block to
+~ Arrows arrows
++ void initialize(URL,ResourceBundle)
+- void drawShape(Block)
++ void BlockCreate()
++ void TreeViewUpdate()
++ void TreeBlock(Block,TreeItem<String>)
+- void drawArrows()
+- void drawArrow(Block,Block)
+- Points<Point2D,Point2D> getConnectionPoints(Block,Block)
+- void Instruction()
+- void SaveAs()
+- void saveFile(File)
+- void Open()
+- void unpackingFile(File)
+- void ExportIntoPNG()
+- void ClearAllObjects()
+}
+class com.enteractive.trees.Points {
++ X item1
++ Y item2
+}
+
+
+java.io.Serializable <|.. com.enteractive.trees.Block
+javafx.scene.Group <|-- com.enteractive.trees.Block
+javafx.application.Application <|-- com.enteractive.trees.HelloApplication
+java.io.Serializable <|.. com.enteractive.trees.Arrows
+java.io.Serializable <|.. com.enteractive.trees.BlockList
+java.io.Serializable <|.. com.enteractive.trees.Arrow
+javafx.scene.Group <|-- com.enteractive.trees.Arrow
+javafx.fxml.Initializable <|.. com.enteractive.trees.HelloController
+@enduml
